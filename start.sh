@@ -5,17 +5,20 @@
 
 echo "🚀 Starting application deployment..."
 
-# Validate DATABASE_URL is set
+# Check DATABASE_URL configuration
 if [ -z "$DATABASE_URL" ]; then
-    echo "❌ ERROR: DATABASE_URL environment variable is not set!"
-    echo "💡 Please connect your PostgreSQL database to this service:"
-    echo "   1. Go to your service settings on Render/Railway"
+    echo "⚠️  WARNING: DATABASE_URL environment variable is not set!"
+    echo "💡 The app will attempt to use fallback database configuration from environment variables."
+    echo ""
+    echo "For production deployments on Render/Railway:"
+    echo "   1. Go to your service settings"
     echo "   2. Add DATABASE_URL environment variable"
     echo "   3. Use the Internal Database URL from your database service"
-    exit 1
+    echo ""
+    echo "Continuing with fallback configuration..."
+else
+    echo "✅ DATABASE_URL is configured"
 fi
-
-echo "✅ DATABASE_URL is configured"
 
 # Wait for database to be ready (important for cloud deployments)
 echo "⏳ Waiting for database connection..."
