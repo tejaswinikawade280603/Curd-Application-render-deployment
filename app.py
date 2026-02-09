@@ -10,15 +10,16 @@ load_dotenv()
 app = Flask(__name__)
 
 # ============ DATABASE CONFIGURATION ============
-# Railway provides DATABASE_URL, but we need to handle both local and Railway
+# Platform services (Render/Railway) provide DATABASE_URL
+# Handle both postgres:// and postgresql:// formats
 database_url = os.getenv('DATABASE_URL')
 
-# Railway uses postgres:// but SQLAlchemy needs postgresql://
-if database_url and database_url.startswith('postgres://'):
-    database_url = database_url.replace('postgres://', 'postgresql://', 1)
-
-# If no DATABASE_URL, build from individual env vars (for local development)
-if not database_url:
+if database_url:
+    # Convert postgres:// to postgresql:// for SQLAlchemy compatibility
+    if database_url.startswith('postgres://'):
+        database_url = database_url.replace('postgres://', 'postgresql://', 1)
+else:
+    # Fallback for local development when DATABASE_URL is not set
     db_host = os.getenv("DB_HOST", "localhost")
     db_name = os.getenv("DB_NAME", "todoapp")
     db_user = os.getenv("DB_USER", "postgres")

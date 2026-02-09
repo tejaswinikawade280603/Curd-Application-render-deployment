@@ -1,9 +1,13 @@
 #!/bin/bash
 
-# Railway Startup Script
-# This script runs migrations and seeding before starting the app
+# Universal Startup Script for Cloud Deployments
+# Works with Render, Railway, and other platforms
 
-echo "🚀 Starting Railway deployment..."
+echo "🚀 Starting application deployment..."
+
+# Wait for database to be ready (important for cloud deployments)
+echo "⏳ Waiting for database connection..."
+sleep 5
 
 # Run database migrations
 echo "📦 Running database migrations..."
@@ -13,7 +17,8 @@ flask db upgrade
 if [ $? -eq 0 ]; then
     echo "✅ Migrations completed successfully"
 else
-    echo "❌ Migration failed!"
+    echo "❌ Migration failed! Check your DATABASE_URL configuration"
+    echo "💡 Make sure you have created a PostgreSQL database and connected it to your service"
     exit 1
 fi
 
@@ -22,5 +27,5 @@ echo "🌱 Seeding database..."
 python seed_db.py
 
 # Start the application with Gunicorn
-echo "🎯 Starting Gunicorn server..."
+echo "🎯 Starting Gunicorn server on port $PORT..."
 exec gunicorn --bind 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 60 app:app

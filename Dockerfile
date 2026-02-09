@@ -19,8 +19,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
-# Make start script executable
-RUN chmod +x start.sh
+# Convert line endings and make start script executable
+RUN apt-get update && apt-get install -y dos2unix && \
+    dos2unix start.sh && \
+    chmod +x start.sh && \
+    apt-get remove -y dos2unix && \
+    rm -rf /var/lib/apt/lists/*
 
 # Expose port (Railway will set PORT env variable)
 EXPOSE ${PORT:-5000}
