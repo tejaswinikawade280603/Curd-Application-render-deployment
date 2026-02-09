@@ -1,4 +1,4 @@
-# 🚀 Flask Todo Application
+# 🚀 Flask Todo Application ..
 
 A production-ready todo application built with Flask, PostgreSQL, Flask-SQLAlchemy, and Flask-Migrate. Fully containerized with Docker and ready for Railway deployment.
 

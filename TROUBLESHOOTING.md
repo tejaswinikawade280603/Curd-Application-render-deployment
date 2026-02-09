@@ -58,7 +58,38 @@ flask db upgrade
 
 ### 2. Database Connection Errors
 
-#### Error: "could not connect to server: Connection refused"
+#### Error: "connection to server at localhost port 5432 failed" (Render/Railway)
+
+**Cause:** `DATABASE_URL` environment variable is not set on your deployment platform
+
+**Solution:**
+
+**On Render:**
+1. Go to your web service dashboard
+2. Click "Environment" tab
+3. Add environment variable:
+   - Key: `DATABASE_URL`
+   - Value: Copy the "Internal Database URL" from your PostgreSQL database service
+4. Click "Save Changes" and redeploy
+
+**On Railway:**
+1. Railway automatically sets `DATABASE_URL` when you add PostgreSQL
+2. Make sure the database service is linked to your web service
+3. Check the "Variables" tab to confirm `DATABASE_URL` exists
+4. If missing, reconnect the database to your service
+
+**Verify the fix:**
+- After adding `DATABASE_URL`, check deploy logs
+- You should see "✅ DATABASE_URL is configured"
+- If you still see localhost error, the variable isn't set correctly
+
+**Prevention:**
+- The updated `render.yaml` now automatically connects the database
+- The `start.sh` script validates `DATABASE_URL` before running migrations
+
+---
+
+#### Error: "could not connect to server: Connection refused" (Local Development)
 
 **Cause:** PostgreSQL is not running
 
